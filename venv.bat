@@ -1,1 +1,1 @@
-venv\scripts\activate 
+call venv\scripts\activate 

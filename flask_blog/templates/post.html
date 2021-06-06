@@ -8,7 +8,7 @@
                     <small class="text-muted">
                          <span id="post-time-created"></span>
                     </small>
-                    {% if post.author == current_user or current_user.privilege_level <= 1 %}
+                    {% if post.author == current_user or (current_user.is_authenticated and current_user.privilege_level <= 1) %}
                     <div>
                         <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('posts.updatePost', post_id=post.id)}}">Update</a>
                         <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
