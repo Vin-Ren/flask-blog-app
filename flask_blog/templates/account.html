@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="content-section">
+          <div class="media">
+                <img class="rounded-circle account-img" src="{{ get_profile_picture(current_user) }}">
+                <div class="media-body">
+                      <h2 class="account-heading">{{ current_user.username }}</h2>
+                      <p class="text-secondary">{{ current_user.email }}</p>
+                </div>
+          </div>
+        <form action="" method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Account Info</legend>
+                {% if current_user.privilege_level <= 3 %}
+                    <h5>User privilege level: {{ current_user.privilege_level }} <small class="text-muted" style="font-size:0.7rem">(Lower is higher)</small></h5>
+                {% endif %}
+                <div class="form-group">
+                    {{ form.username.label(class="form-control-label") }}
+
+                    <!-- Validation Error if error -->
+                    {% if form.username.errors %}
+                        {{ form.username(class="form-control form-control-lg form-control-md form-control-xs is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.username.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.username(class="form-control form-control-lg form-control-md form-control-xs") }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.email.label(class="form-control-label") }}
+
+                    <!-- Validation Error if error -->
+                    {% if form.email.errors %}
+                        {{ form.email(class="form-control form-control-lg form-control-md form-control-xs is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class="form-control form-control-lg form-control-md form-control-xs") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.profile_picture.label() }}
+                    {{ form.profile_picture(class="form-control-file") }}
+                    <small class="text-muted">Max file size is 25MB</small>
+                    {% if form.profile_picture.errors %}
+                        {% for error in form.profile_picture.errors %}
+                            <span class="text-danger">{{ error }}</span><br>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+{% endblock content %}

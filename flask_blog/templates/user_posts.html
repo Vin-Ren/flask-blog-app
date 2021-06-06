@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1 class="mb-3">Posts by {{ user.username }} ({{ posts.total }})</h1>
+    {% if current_user.privilege_level <= 3 %}
+        <h5>{{ user.username }}'s privilege level: {{ user.privilege_level }} <small class="text-muted" style="font-size:0.7rem">(Lower is higher)</small></h5>
+    {% endif %}
+    {% for post in posts.items %}
+        <article class="media content-section">
+          <img src="{{ get_profile_picture(post.author) }}" width="40" height="40" class="rounded-circle mr-1">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2 link-primary" href="{{ url_for('users.userPosts', username=post.author.username) }}">{{ post.author.username }}</a>
+              <small class="text-muted">
+                  <span id="{{post.id}}-time-created">{% if post.is_modified %} <small class="text-muted" style="font-size:0.75rem">(edited)</small> {% endif %}</span>
+              </small>
+            </div>
+            <h2><a class="article-title" href="{{ url_for('posts.post', post_id=post.id) }}">{{ post.title }}</a></h2>
+            <p class="article-content">{{ post.content }}</p>
+          </div>
+        </article>
+        <script type="text/javascript">
+            var timeElement = document.getElementById("{{post.id}}-time-created");
+            var utcTime = "{{post.date_created.strftime('%Y-%m-%d %H:%M:%S')}}";
+            var localDate = moment.utc(utcTime).local().fromNow();
+            timeElement.innerHTML = localDate + timeElement.innerHTML;
+        </script>
+    {% endfor %}
+
+    <ul class="pagination justify-content-center">
+    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if posts.page == page_num %}
+            <a class="btn btn-info mb-4  ml-1" href="{{ url_for('users.userPosts', username=user.username, page=page_num, limit=posts.per_page) }}">{{ page_num }}</a>
+            {% else %}
+            <a class="btn btn-outline-info mb-4  ml-1" href="{{ url_for('users.userPosts', username=user.username, page=page_num, limit=posts.per_page) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            <p class="page-item">...</p>
+        {% endif %}
+    {% endfor %}
+    </ul>
+
+{% endblock content %}
+{% block sidebar %}
+        <div class="col-md-4">
+          <div class="content-section">
+            <h3>Project Status</h3>
+            <p class='text-muted'>Latest Update: 04/06/21
+              <ul class="list-group">
+                <li class="list-group-item list-group-item-light">Status: WIP</li>
+                <li class="list-group-item list-group-item-light">Est Progress: 8/15?</li>
+                <li class="list-group-item list-group-item-light">Day: 3rd</li>
+                <li class="list-group-item list-group-item-light">Finally Some Real Posts!</li>
+              </ul>
+            </p>
+          </div>
+        </div>
+{% endblock sidebar %}

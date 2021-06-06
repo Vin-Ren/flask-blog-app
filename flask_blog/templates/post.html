@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block content %}
+    <article class="media content-section">
+        <img src="{{ get_profile_picture(post.author) }}" width="30" height="30" class="rounded-circle mr-1 mb-1">
+        <div class="media-body">
+            <div class="article-metadata">
+                    <a class="mr-2 link-primary" href="#">{{ post.author.username }}</a>
+                    <small class="text-muted">
+                         <span id="post-time-created"></span>
+                    </small>
+                    {% if post.author == current_user or current_user.privilege_level <= 1 %}
+                    <div>
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('posts.updatePost', post_id=post.id)}}">Update</a>
+                        <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+
+                    </div>
+                    {% endif %}
+            </div>
+            <h2 class="article-title">{{ post.title }}</h2>
+            <p class="article-content">{{ post.content }}</p>
+        </div>
+        <script type="text/javascript">
+            var timeElement = document.getElementById("post-time-created");
+            var utcTime = "{{post.date_created.strftime('%Y-%m-%d %H:%M:%S')}}";
+            var localDate = moment.utc(utcTime).local().format('D MMMM YYYY HH:mm');
+            timeElement.innerHTML = localDate;
+        </script>
+    </article>
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-white" id="deleteModalLabel">Delete Post?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <form action="{{ url_for('posts.deletePost', post_id=post.id) }}" method="POST">
+                        <input type="submit" class="btn btn-danger" value="Delete">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
