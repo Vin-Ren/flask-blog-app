@@ -2,9 +2,7 @@
 {% block content %}
     {% for post in posts.items %}
         <article class="media content-section">
-          <a class="mr-2 link-primary" href="{{ url_for('users.userPosts', username=post.author.username) }}">
-            <img src="{{ get_profile_picture(post.author) }}" width="40" height="40" class="rounded-circle mr-1">
-          </a>
+          <img src="{{ get_profile_picture(post.author) }}" width="40" height="40" class="rounded-circle mr-1">
           <div class="media-body">
             <div class="article-metadata">
                <a class="mr-2 link-primary" href="{{ url_for('users.userPosts', username=post.author.username) }}">{{ post.author.username }}</a>

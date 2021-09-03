@@ -20,7 +20,6 @@ class User(db.Model, UserMixin):
 	password = db.Column(db.String(60), nullable=False)
 	privilege_level = db.Column(db.Integer, nullable=False, default=4)
 	posts = db.relationship('Post', backref='author', lazy=True)
-	replies = db.relationship('Replies', backref='author', lazy=True)
 
 
 	def get_reset_token(self, expires_sec=1800):
@@ -47,19 +46,6 @@ class Post(db.Model):
 	content = db.Column(db.Text, nullable=False)
 	is_modified = db.Column(db.Boolean, default=False, nullable=False)
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-	posts = db.relationship('Replies', backref='post', lazy=True)
 
 	def __repr__(self):
 		return f"{self.__class__.__name__}('{self.title}', '{self.date_created}')"
-
-
-class Replies(db.Model): # WIP
-	id = db.Column(db.Integer, primary_key=True)
-	post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
-	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-	content = db.Column(db.Text, nullable=False)
-	date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-	def __repr__(self):
-		return f"{self.__class__.__name__}('{self.id}', '{self.post_id}')"
-

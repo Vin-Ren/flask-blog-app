@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
     <article class="media content-section">
-        <img src="{{ get_profile_picture(post.author) }}" width="50" height="50" class="rounded-circle mr-1 mb-1">
+        <img src="{{ get_profile_picture(post.author) }}" width="30" height="30" class="rounded-circle mr-1 mb-1">
         <div class="media-body">
             <div class="article-metadata">
                     <a class="mr-2 link-primary" href="#">{{ post.author.username }}</a>
@@ -26,64 +26,6 @@
             timeElement.innerHTML = localDate;
         </script>
     </article>
-    {% for reply in replies %}
-        <div class="media content-section" style="width:85%;margin-left:15%">
-            <img src="{{ get_profile_picture(reply.author) }}" width="30" height="30" class="rounded-circle mr-1 mb-1">
-            <div class="media-body">
-                <div class="article-metadata">
-                        <a class="mr-2 link-primary" href="#">{{ reply.author.username }}</a>
-                        <small class="text-muted">
-                             <span id="reply-{{reply.id}}-time-created"></span>
-                        </small>
-                        {% if reply.author == current_user or (current_user.is_authenticated and current_user.privilege_level <= 1) %}
-                        <div>
-                            <!--
-                            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('posts.updatePost', post_id=post.id)}}">Update</a>
-                            <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
-                            -->
-                        </div>
-                        {% endif %}
-                </div>
-                <p class="article-content">{{ reply.content }}</p>
-            </div>
-            <script type="text/javascript">
-                var timeElement = document.getElementById("reply-{{reply.id}}-time-created");
-                var utcTime = "{{reply.date_created.strftime('%Y-%m-%d %H:%M:%S')}}";
-                var localDate = moment.utc(utcTime).local().format('D MMMM YYYY HH:mm');
-                timeElement.innerHTML = localDate;
-            </script>
-        </div>
-    {% endfor %}
-    <script type="text/javascript">
-        function replyViaAjax() {
-            let data = {post_id : {{post.id}},reply_content : $('#replyContent').val()};
-            $.ajax({data : data, type : 'POST', url : '/reply'})
-            .done(function(data) {
-                let to_be_continued = true;
-            });
-
-            //event.preventDefault();
-        }
-    </script>
-        <div class="media content-section" style="width:85%;margin-left:15%">
-            <img src="{{ get_profile_picture(current_user) }}" width="30" height="30" class="rounded-circle mr-1 mb-1">
-            <div class="media-body">
-                <div class="article-metadata">
-                        <a class="mr-2 link-primary" href="#">{{ current_user.username }}</a>
-                        <small class="text-muted">
-                             <span id="userReply"></span>
-                        </small>
-                </div>
-                <form class="form-inline">
-                <div class="form-group" style="width:100%;margin-top:0.3rem">
-                    <input type="text" class="form-control mr-2" id="replyContent" style="width:80%" placeholder="Reply Something">
-                    <button class="rounded-circle btn btn-secondary" onclick="replyViaAjax()"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-                </div>
-                </form>
-            </div>
-        </div>
-
-
     <!-- Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
