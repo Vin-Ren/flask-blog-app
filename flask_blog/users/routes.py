@@ -29,7 +29,7 @@ def login():
 	if current_user.is_authenticated:
 		return redirect(url_for('main.home'))
 	form = LoginForm()
-	if form.validate_on_submit():
+	if form.validate_on_submit() or request.method == 'POST':
 		user = User.query.filter_by(email=form.email.data).first()
 		if user and bcrypt.check_password_hash(user.password, form.password.data):
 			login_user(user, remember=form.rememberMe.data)
