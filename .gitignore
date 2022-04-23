@@ -9,6 +9,7 @@ profile_pictures/
 test/
 backup/
 *.txt
+*.db
 
 # C extensions
 *.so
